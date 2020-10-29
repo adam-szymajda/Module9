@@ -29,7 +29,6 @@ def currency_exchange():
         for currency in data[0]['rates']:
             if currency['code'] == select:
                 return f"Należność w PLN: {qty*currency['ask']}"
-        pln_to_pay = qty
     return redirect("/xe")
 
 
