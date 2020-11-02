@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Albumy</title>
+    <style>
+        table, th, tr, td {border: 1px solid black;}
+    </style>
+</head>
+<body>
+<h2>Lista albumów</h2>
+
+<div class="error">
+{% for error in errors %}
+  <div>{{ error }}</div>
+{% endfor %}
+</div>
+<table>
+    <thead>
+    <th>Tytuł</th>
+    <th>Wykonawca</th>
+    <th>Gatunek</th>
+    <th>Rok</th>
+    </thead>
+{% for album in albums %}
+    <tr>
+        <td><a href="/albums/{{ loop.index }}">{{ album.title }}</a></td>
+        <td>{{ album.artist }}</td>
+        <td>{{ album.genre }}</td>
+        <td>{{ album.year }}</td>
+    </tr>
+{% endfor %}
+</table>
+<div>
+    <h2> Dodaj nowy album: </h2>
+    <form method="POST" action="/albums/">
+        {{ form.hidden_tag() }}
+        <table>
+            {% for field in form if field.widget.input_type != 'hidden' %}
+                <tr>
+                    <th>{{ field.label }} {% if field.flags.required %}*{% endif %}</th>
+                    <td>{{ field }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <input type="submit" value="Go">
+    </form>
+</div>
+<div>
+  <h2> Wyszukaj album </h2>
+  <form method="POST" action="/albums/">
+    {{ searchform.search.label }}
+    {{ searchform.search}}
+    <input type="submit" value="Search"><br>
+    <br>
+    {{ searchform.output.label }}
+    {{ searchform.output}}
+  </form>
+</div>
+</body>
+</html>

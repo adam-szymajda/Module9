@@ -8,6 +8,9 @@
   <div class="jumbotron text-center">
     <h1>Currency exchange calculator</h1>
   </div>
+  {% for error in errors %}
+    <div>{{ error }}</div>
+  {% endfor %}
   <form method="post">
     <div class="container">
       <div class="row">
@@ -28,6 +31,7 @@
           <input type="submit" value="Calculate">
         </div>
       </div>
+      <p>Należność w PLN: {{ to_pay }}</p>
     </div>
   <form>
 </body>
