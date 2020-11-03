@@ -12,11 +12,20 @@ class Albums:
         return self._albums
 
     def get(self, id):
-        return self._albums[id]
+        # return self._albums[id]
+        album = [album for album in self.all() if album['id']==id+1]
+        if album:
+            return album[0]
+        return []
 
     def add(self, data):
         data.pop('csrf_token')
         self._albums.append(data)
+        self.save()
+
+    def add_via_api(self, data):
+        self._albums.append(data)
+        self.save()
 
     def save(self):
         with open("albums.json", "w") as f:
@@ -27,17 +36,30 @@ class Albums:
         self._albums[id] = data
         self.save()
 
+    def update_via_api(self, data, id):
+        album = self.get(id)
+        if album:
+            index = self._albums.index(album)
+            self._albums[index] = data
+            self.save
+            return True
+        return False
+
+    def delete(self, id):
+        album = self.get(id)
+        if album:
+            self._albums.remove(album)
+            self.save()
+            return True
+        return False
+
     def find(self, pattern):
         result = []
         pattern.pop('csrf_token')
-        # print(self._albums)
         for album in self.all():
             for key, value in album.items():
                 if pattern['search'] in str(value):
-                    print(album)
                     result.append(album)
-        print(result)
-        print(self._albums)
-        return self._albums
+        return result
 
 albums = Albums()

@@ -3,6 +3,7 @@ from wtforms import StringField, BooleanField, TextAreaField, IntegerField
 from wtforms.validators import DataRequired
 
 class AlbumForm(FlaskForm):
+    id = IntegerField("ID", validators=[DataRequired()])
     title = StringField("Title", validators=[DataRequired()])
     artist = StringField("Artist", validators=[DataRequired()])
     genre = StringField("Genre", validators=[])

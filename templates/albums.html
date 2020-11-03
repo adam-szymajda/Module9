@@ -17,6 +17,7 @@
 </div>
 <table>
     <thead>
+    <th>ID</th>
     <th>Tytuł</th>
     <th>Wykonawca</th>
     <th>Gatunek</th>
@@ -24,6 +25,7 @@
     </thead>
 {% for album in albums %}
     <tr>
+        <td>{{ album.id }}</td>
         <td><a href="/albums/{{ loop.index }}">{{ album.title }}</a></td>
         <td>{{ album.artist }}</td>
         <td>{{ album.genre }}</td>
@@ -54,7 +56,7 @@
     <input type="submit" value="Search"><br>
     <br>
     {{ searchform.output.label }}
-    {{ searchform.output}}
+    {{ searchform.output }}
   </form>
 </div>
 </body>

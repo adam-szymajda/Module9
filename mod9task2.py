@@ -1,4 +1,4 @@
-from flask import Flask, url_for, request, render_template, redirect
+from flask import Flask, url_for, request, render_template, redirect, jsonify, abort, make_response
 from album_form import AlbumForm, SearchForm
 from albums import albums
 
@@ -12,10 +12,12 @@ def albums_main():
     errors = ""
     if request.method == "POST":
         if form.validate_on_submit():
+            print(form.data)
             albums.add(form.data)
-            albums.save()
-        if searchform.data:
-            return render_template("albums.html", form=form, searchform=albums.find(searchform.data), albums=albums.all(), errors=errors)
+        # if searchform.data:
+        # searchform.output = searchform.search
+        # print(searchform.output)
+        # print(searchform.data)
         return redirect(url_for("albums_main"))
 
     return render_template("albums.html", form=form, searchform=searchform, albums=albums.all(), errors=errors)
@@ -30,6 +32,79 @@ def album_details(id):
         return redirect(url_for("albums_main"))
 
     return render_template("album.html", form=form, id=id)
+
+@app.route("/api/v1/albums/", methods=["GET"])
+def albums_list_api_v1():
+    return jsonify(albums.all())
+
+@app.route("/api/v1/albums/<int:id>/", methods=["GET"])
+def get_album(id):
+    album = albums.get(id)
+    if not album:
+        abort(404)
+    return jsonify({"album":album})
+
+@app.route("/api/v1/albums/", methods=["POST"])
+def add_album():
+    print(request.json)
+    if ( not request.json or
+        not 'title' in request.json or
+        not 'artist' in request.json
+    ):
+        abort(400)
+    album = {
+        'id' : albums.all()[-1]['id'] + 1,
+        'title' : request.json['title'],
+        'artist' : request.json['artist'],
+        'genre' : request.json['genre'],
+        'year' : request.json['year'],
+    }
+    albums.add_via_api(album)
+    return jsonify({"album": album}), 201
+
+@app.route("/api/v1/albums/<int:id>", methods=["DELETE"])
+def delete_album(id):
+    result = albums.delete(id)
+    if not result:
+        abort(404)
+    return jsonify({'result': result})
+
+@app.route("/api/v1/albums/<int:id>", methods=["PUT"])
+def update_album(id):
+    album = albums.get(id)
+    print(album)
+    if not album:
+        abort(404)
+    if not request.json:
+        abort(404)
+    data = request.json
+    if any ([
+        'title' in data and not isinstance(data.get('title'), str),
+        'artist' in data and not isinstance(data.get('artist'), str),
+        'genre' in data and not isinstance(data.get('genre'), str),
+        # 'year' in data and not isinstance(data.get('year'), int),
+    ]):
+        abort(400)
+    album = {
+        'id' : album['id'],
+        'title' : data.get('title', album['title']),
+        'artist' : data.get('artist', album['artist']),
+        'genre' : data.get('genre', album['genre']),
+        'year' : data.get('year', album['year']),
+    }
+    print("\n")
+    print(album)
+    albums.update_via_api(album, id)
+    return jsonify({'album': album})
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found', 'status_code': 404}), 404)
+
+@app.errorhandler(400)
+def bad_request(error):
+    return make_response(jsonify({'error': 'Bad request', 'status_code': 400}), 400)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
