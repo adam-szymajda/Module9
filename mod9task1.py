@@ -41,9 +41,9 @@ def cache_data(f):
             with open(path, 'wb') as cache:
                 pickle.dump((rates, time.time()), cache)
         return rates
-    return wrapper()
+    return wrapper
 
-# @cache_data
+@cache_data
 def rate():
     rates = {
         rate['code']: float(rate['ask']) for rate in requests.get(ENDPOINT).json()[0]['rates']

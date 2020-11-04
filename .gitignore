@@ -11,3 +11,5 @@ templates/todos.html
 templates/todo.html
 todo.py
 albums.json
+xe.csv
+xe.pickle
