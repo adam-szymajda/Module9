@@ -63,4 +63,7 @@ class Albums:
                         result.append(album)
         return result
 
+    def get_next_id(self):
+        return self.all()[-1]['id'] + 1
+
 # albums = Albums()

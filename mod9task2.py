@@ -15,7 +15,15 @@ def albums_main():
     if request.method == "POST":
         if form.validate_on_submit():
             print(form.data)
-            albums.add(form.data)
+            temp = {
+                'id' : albums.get_next_id(),
+                'title' : form.data.get('title'),
+                'artist' : form.data.get('artist'),
+                'genre' : form.data.get('genre'),
+                'year' : form.data.get('year'),
+                'csrf_token' : form.data.get('csrf_token'),
+            }
+            albums.add(temp)
             return render_template("albums.html", form=form, searchform=searchform, albums=albums.all(), search_result=None, errors=errors)
         if searchform.data:
             search_result = albums.find(searchform.data)
@@ -54,7 +62,7 @@ def add_album():
     ):
         abort(400)
     album = {
-        'id' : albums.all()[-1]['id'] + 1,
+        'id' : albums.get_next_id(),
         'title' : request.json['title'],
         'artist' : request.json['artist'],
         'genre' : request.json['genre'],

@@ -3,66 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <title>Albumy</title>
-    <style>
+    <!-- <style>
         table, th, tr, td {border: 1px solid black;}
-    </style>
+    </style> -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
-<h2>Lista albumów</h2>
+<!-- <h2>Lista albumów</h2> -->
 
-<div class="error">
-{% for error in errors %}
-  <div>{{ error }}</div>
-{% endfor %}
-</div>
-<table>
-    <thead>
-    <th>ID</th>
-    <th>Tytuł</th>
-    <th>Wykonawca</th>
-    <th>Gatunek</th>
-    <th>Rok</th>
-    </thead>
-{% for album in albums %}
-    <tr>
-        <td>{{ album.id }}</td>
-        <td><a href="/albums/{{ loop.index }}">{{ album.title }}</a></td>
-        <td>{{ album.artist }}</td>
-        <td>{{ album.genre }}</td>
-        <td>{{ album.year }}</td>
-    </tr>
-{% endfor %}
-</table>
-<div>
-    <h2> Dodaj nowy album: </h2>
-    <form method="POST" action="/albums/">
-        {{ form.hidden_tag() }}
-        <table>
-            {% for field in form if field.widget.input_type != 'hidden' %}
-                <tr>
-                    <th>{{ field.label }} {% if field.flags.required %}*{% endif %}</th>
-                    <td>{{ field }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-        <input type="submit" value="Go">
-    </form>
-</div>
-<div>
-  <h2> Wyszukaj album </h2>
-  <form method="POST" action="/albums/">
-    {{ searchform.search.label }}
-    {{ searchform.search }}
-    <input type="submit" value="Search"><br>
-  </form>
-</div>
-<br>
-<div class="searchoutput">
-  {% if search_result %}
-    {% for result in search_result %}
-      {{ result }}<br>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">Moje albumy</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="error">
+    {% for error in errors %}
+      <div>{{ error }}</div>
     {% endfor %}
-  {% endif %}
+    </div>
+    <table class="table">
+        <thead>
+        <th>ID</th>
+        <th>Tytuł</th>
+        <th>Wykonawca</th>
+        <th>Gatunek</th>
+        <th>Rok</th>
+        </thead>
+    {% for album in albums %}
+        <tr>
+            <td>{{ album.id }}</td>
+            <td><a href="/albums/{{ loop.index }}">{{ album.title }}</a></td>
+            <td>{{ album.artist }}</td>
+            <td>{{ album.genre }}</td>
+            <td>{{ album.year }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+    <br>
+    <br>
+    <div>
+        <h2> Dodaj nowy album: </h2>
+        <form method="POST" action="/albums/">
+            {{ form.hidden_tag() }}
+            <table class="table">
+                {% for field in form if field.widget.input_type != 'hidden' %}
+                    <tr>
+                        <th>{{ field.label }} {% if field.flags.required %}*{% endif %}</th>
+                        <td>{{ field }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <input type="submit" value="Go">
+        </form>
+    </div>
+    <br>
+    <br>
+    <div>
+      <h2> Wyszukaj album: </h2>
+      <form method="POST" action="/albums/">
+        <div class="form-group mb-2">
+          {{ searchform.search.label }}
+          {{ searchform.search }}
+          <input type="submit" value="Search"><br>
+        </div>
+      </form>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="form-group">
+      {% if search_result %}
+      <table class="table">
+          <h2>Wyniki wyszukiwania:<h2>
+          <thead>
+          <th>ID</th>
+          <th>Tytuł</th>
+          <th>Wykonawca</th>
+          <th>Gatunek</th>
+          <th>Rok</th>
+          </thead>
+        {% for result in search_result %}
+            <tr>
+                <td>{{ result.id }}</td>
+                <td><a href="/albums/{{ loop.index }}">{{ result.title }}</a></td>
+                <td>{{ result.artist }}</td>
+                <td>{{ result.genre }}</td>
+                <td>{{ result.year }}</td>
+            </tr>
+        {% endfor %}
+      </table
+      {% endif %}
+    </div>
+ </div>
 </div>
 </body>
 </html>
