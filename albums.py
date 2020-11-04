@@ -1,9 +1,9 @@
 import json
 
 class Albums:
-    def __init__(self):
+    def __init__(self, filename):
         try:
-            with open("albums.json", "r") as f:
+            with open(filename, "r") as f:
                 self._albums = json.load(f)
         except:
             self._albums = []
@@ -58,8 +58,9 @@ class Albums:
         pattern.pop('csrf_token')
         for album in self.all():
             for key, value in album.items():
-                if pattern['search'] in str(value):
-                    result.append(album)
+                if pattern['search'].lower() in str(value).lower():
+                    if not album in result:
+                        result.append(album)
         return result
 
-albums = Albums()
+# albums = Albums()

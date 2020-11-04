@@ -52,12 +52,17 @@
   <h2> Wyszukaj album </h2>
   <form method="POST" action="/albums/">
     {{ searchform.search.label }}
-    {{ searchform.search}}
+    {{ searchform.search }}
     <input type="submit" value="Search"><br>
-    <br>
-    {{ searchform.output.label }}
-    {{ searchform.output }}
   </form>
+</div>
+<br>
+<div class="searchoutput">
+  {% if search_result %}
+    {% for result in search_result %}
+      {{ result }}<br>
+    {% endfor %}
+  {% endif %}
 </div>
 </body>
 </html>

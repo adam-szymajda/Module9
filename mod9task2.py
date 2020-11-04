@@ -1,6 +1,8 @@
 from flask import Flask, url_for, request, render_template, redirect, jsonify, abort, make_response
 from album_form import AlbumForm, SearchForm
-from albums import albums
+from albums import Albums
+
+albums = Albums("albums.json")
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "veryimportantsecretKEY"
@@ -14,13 +16,12 @@ def albums_main():
         if form.validate_on_submit():
             print(form.data)
             albums.add(form.data)
-        # if searchform.data:
-        # searchform.output = searchform.search
-        # print(searchform.output)
-        # print(searchform.data)
-        return redirect(url_for("albums_main"))
+            return render_template("albums.html", form=form, searchform=searchform, albums=albums.all(), search_result=None, errors=errors)
+        if searchform.data:
+            search_result = albums.find(searchform.data)
+            return render_template("albums.html", form=form, searchform=searchform, albums=albums.all(), search_result=search_result, errors=errors)
 
-    return render_template("albums.html", form=form, searchform=searchform, albums=albums.all(), errors=errors)
+    return render_template("albums.html", form=form, searchform=searchform, albums=albums.all(), search_result=None, errors=errors)
 
 @app.route("/albums/<int:id>/", methods=["GET", "POST"])
 def album_details(id):

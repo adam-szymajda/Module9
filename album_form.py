@@ -10,5 +10,4 @@ class AlbumForm(FlaskForm):
     year = IntegerField("Year", validators=[])
 
 class SearchForm(FlaskForm):
-    search = StringField("Search", validators=[])
-    output = TextAreaField("Albums found:", validators=[])
+    search = StringField("Search", validators=[DataRequired()])

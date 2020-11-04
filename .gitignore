@@ -10,3 +10,4 @@ models.py
 templates/todos.html
 templates/todo.html
 todo.py
+albums.json
